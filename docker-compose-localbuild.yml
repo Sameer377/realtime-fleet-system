@@ -1,0 +1,44 @@
+services:
+
+  mqtt:
+    image: eclipse-mosquitto:2
+    container_name: fleet-mqtt
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "mosquitto_pub -h localhost -t health -m ping"]
+      interval: 2s
+      timeout: 3s
+      retries: 10
+      start_period: 2s
+
+  backend:
+    build: ./app
+    container_name: fleet-backend
+    depends_on:
+      mqtt:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      MQTT_BROKER: tcp://mqtt:1883
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 3s
+      timeout: 5s
+      retries: 30
+      start_period: 80s
+
+  robot-r1:
+    build: ./robot
+    container_name: robot-r1
+    command: ["r1"]
+    depends_on:
+      mqtt:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    environment:
+      MQTT_BROKER: tcp://mqtt:1883
