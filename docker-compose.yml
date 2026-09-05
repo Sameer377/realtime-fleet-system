@@ -14,7 +14,7 @@ services:
       start_period: 2s
 
   backend:
-    image: sameers377/fleet-backend:latest
+    build: ./app
     container_name: fleet-backend
     depends_on:
       mqtt:
@@ -32,93 +32,9 @@ services:
       start_period: 80s
 
   robot-r1:
-    image: sameers377/robot:latest
+    build: ./robot
     container_name: robot-r1
     command: ["r1"]
-    depends_on:
-      mqtt:
-        condition: service_healthy
-      backend:
-        condition: service_healthy
-    environment:
-      MQTT_BROKER: tcp://mqtt:1883
-
-  robot-r2:
-    image: sameers377/robot:latest
-    container_name: robot-r2
-    command: ["r2"]
-    depends_on:
-      mqtt:
-        condition: service_healthy
-      backend:
-        condition: service_healthy
-    environment:
-      MQTT_BROKER: tcp://mqtt:1883
-
-  robot-r3:
-    image: sameers377/robot:latest
-    container_name: robot-r3
-    command: ["r3"]
-    depends_on:
-      mqtt:
-        condition: service_healthy
-      backend:
-        condition: service_healthy
-    environment:
-      MQTT_BROKER: tcp://mqtt:1883
-
-  robot-r4:
-    image: sameers377/robot:latest
-    container_name: robot-r4
-    command: ["r4"]
-    depends_on:
-      mqtt:
-        condition: service_healthy
-      backend:
-        condition: service_healthy
-    environment:
-      MQTT_BROKER: tcp://mqtt:1883
-
-  robot-r5:
-    image: sameers377/robot:latest
-    container_name: robot-r5
-    command: ["r5"]
-    depends_on:
-      mqtt:
-        condition: service_healthy
-      backend:
-        condition: service_healthy
-    environment:
-      MQTT_BROKER: tcp://mqtt:1883
-
-  robot-r6:
-    image: sameers377/robot:latest
-    container_name: robot-r6
-    command: ["r6"]
-    depends_on:
-      mqtt:
-        condition: service_healthy
-      backend:
-        condition: service_healthy
-    environment:
-      MQTT_BROKER: tcp://mqtt:1883
-
-  robot-r7:
-    image: sameers377/robot:latest
-    container_name: robot-r7
-    command: ["r7"]
-    depends_on:
-      mqtt:
-        condition: service_healthy
-      backend:
-        condition: service_healthy
-    environment:
-      MQTT_BROKER: tcp://mqtt:1883
-
-  robot-r8:
-    image: sameers377/robot:latest
-    container_name: robot-r8
-    command: ["r8"]
     depends_on:
       mqtt:
         condition: service_healthy
